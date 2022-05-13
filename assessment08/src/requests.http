@@ -1,0 +1,11 @@
+### Agent Get All
+GET http://localhost:8080/api/agent
+
+### Agent Add
+POST http://localhost:8080/api/agent
+Content-Length: application/json
+
+{
+    "firstName": "Warren",
+    "lastName": "Longmire"
+}
