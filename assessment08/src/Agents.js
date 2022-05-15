@@ -6,7 +6,8 @@ function Agents() {
     const [formData, setFormData] = useState({
         firstName:"",
         middleName:"",
-        lastName:""
+        lastName:"",
+        heightInInches:""
     });
 
     useEffect(() => {
@@ -23,7 +24,8 @@ function Agents() {
         const editedAgent = {
             firstName: formData.firstName,
             middleName: formData.middleName,
-            lastName: formData.lastName
+            lastName: formData.lastName,
+            heightInInches: formData.heightInInches
         }
         fetch(`http://localhost:8080/api/agent/${id}`, {
             method: "PUT",
@@ -32,15 +34,32 @@ function Agents() {
             },
             body: JSON.stringify(editedAgent)
         })
+        .then(resp => resp.json())
+        .then(data => {
+            setAgents(data);
+        })
     }
 
-    const handleAddAgent = (firstName, middleName, lastName) => {
+    const handleAddAgent = (firstName, middleName, lastName, heightInInches) => {
         const newAgent = {
-            agentId: agents.length + 1,
             firstName: firstName,
             middleName: middleName,
-            lastName: lastName
+            lastName: lastName,
+            heightInInches: heightInInches
         }
+        console.log(JSON.stringify(newAgent))
+        fetch(`http://localhost:8080/api/agent`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newAgent)
+            }).then(resp => {
+                return resp.json();
+            }).then(agent => {
+                console.log(agent);
+                setAgents([...agents, agent]);
+            });
         setAgents(agents.concat(newAgent));
     }
 
@@ -70,12 +89,13 @@ function Agents() {
         } else {
             console.log("add a new agent");
             console.log(formData.firstName);
-            handleAddAgent(formData.firstName, formData.middleName, formData.lastName);
+            handleAddAgent(formData.firstName, formData.middleName, formData.lastName, formData.heightInInches);
         }
         setFormData({
             firstName:"",
             middleName:"",
-            lastName:""
+            lastName:"",
+            heightInInches:""
         });
     }
 
@@ -87,7 +107,7 @@ function Agents() {
             {
                 agents.map(a => {
                     return(
-                        <p>{a.firstName} {a.middleName} {a.lastName} <button onClick={() => (handleEdit(a.agentId))}>Edit</button><button onClick={() => (handleDelete(a.agentId))}>Delete</button></p>
+                        <p>{a.firstName} {a.middleName} {a.lastName} <button onClick={() => handleEdit(a.agentId)}>Edit</button><button onClick={() => handleDelete(a.agentId)}>Delete</button></p>
                         )
                 })
             }
@@ -107,6 +127,10 @@ function Agents() {
                 <div>
                     <label htmlFor='lastName'>Last Name</label>
                     <input id='lastName' onChange={handleFormChange} name='lastName' type='text' value={formData.lastName}/>
+                </div>
+                <div>
+                    <label htmlFor='heightInInches'>Height (Inches)</label>
+                    <input id='heightInInches' onChange={handleFormChange} name='heightInInches' type='number' value={formData.heightInInches}/>
                 </div>
                 <button onClick={handleSubmit}>{(editIndex)?"Edit":"Create"} Agent</button>
             </form>
