@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import App from './App';
 
 function Agents() {
     const [agents, setAgents] = useState([]);
@@ -40,11 +41,12 @@ function Agents() {
         })
         .then(resp => {
             const newAgents = [...agents];
-            const editedIndex = agents.findIndex(agent => id === agents.agentId);
-            newAgents[editedIndex].firstName = formData.firstName;
-            newAgents[editedIndex].middleName = formData.middleName;
-            newAgents[editedIndex].lastName = formData.lastName;
-            newAgents[editedIndex].heightInInches = formData.heightInInches;
+            const editAgentId = newAgents.findIndex(agent => editedAgent.agentId === newAgents.id);
+            console.log(editAgentId);
+            newAgents[editAgentId].firstName = formData.firstName;
+            newAgents[editAgentId].middleName = formData.middleName;
+            newAgents[editAgentId].lastName = formData.lastName;
+            newAgents[editAgentId].heightInInches = formData.heightInInches;
             setAgents(newAgents);
             return (resp.json());
         })
