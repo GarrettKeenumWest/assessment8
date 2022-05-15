@@ -21,11 +21,15 @@ function Agents() {
     const handleEdit = (id) => {
         setEditIndex(id);  
         console.log(`editing ${id}`);
+    }
+
+    const doEdit = (id, firstName, middleName, lastName, heightInInches) => {
         const editedAgent = {
-            firstName: formData.firstName,
-            middleName: formData.middleName,
-            lastName: formData.lastName,
-            heightInInches: formData.heightInInches
+            agentId: id,
+            firstName: firstName,
+            middleName: middleName,
+            lastName: lastName,
+            heightInInches: heightInInches
         }
         fetch(`http://localhost:8080/api/agent/${id}`, {
             method: "PUT",
@@ -34,11 +38,17 @@ function Agents() {
             },
             body: JSON.stringify(editedAgent)
         })
-        .then(resp => resp.json())
-        .then(data => {
-            setAgents(data);
+        .then(resp => {
+            const newAgents = [...agents];
+            const editedIndex = agents.findIndex(agent => id === agents.agentId);
+            newAgents[editedIndex].firstName = formData.firstName;
+            newAgents[editedIndex].middleName = formData.middleName;
+            newAgents[editedIndex].lastName = formData.lastName;
+            newAgents[editedIndex].heightInInches = formData.heightInInches;
+            setAgents(newAgents);
+            return (resp.json());
         })
-    }
+    };
 
     const handleAddAgent = (firstName, middleName, lastName, heightInInches) => {
         const newAgent = {
@@ -85,8 +95,10 @@ function Agents() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(editIndex);
         if(editIndex){
-            handleEdit(e.target.value)
+            console.log(editIndex, formData.firstName, formData.middleName, formData.lastName, formData.heightInInches);
+            doEdit(editIndex, formData.firstName, formData.middleName, formData.lastName, formData.heightInInches);
         } else {
             console.log("add a new agent");
             console.log(formData.firstName);
@@ -98,6 +110,7 @@ function Agents() {
             lastName:"",
             heightInInches:""
         });
+        setEditIndex(null);
     }
 
     return (<div>
