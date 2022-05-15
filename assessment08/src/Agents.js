@@ -18,9 +18,30 @@ function Agents() {
     }, []);
 
     const handleEdit = (id) => {
-        console.log(`Edits ${id}`);
-        setEditIndex(id);
-        setFormData();
+        setEditIndex(id);  
+        console.log(`editing ${id}`);
+        const editedAgent = {
+            firstName: formData.firstName,
+            middleName: formData.middleName,
+            lastName: formData.lastName
+        }
+        fetch(`http://localhost:8080/api/agent/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editedAgent)
+        })
+    }
+
+    const handleAddAgent = (firstName, middleName, lastName) => {
+        const newAgent = {
+            agentId: agents.length + 1,
+            firstName: firstName,
+            middleName: middleName,
+            lastName: lastName
+        }
+        setAgents(agents.concat(newAgent));
     }
 
     const handleDelete = (id) => {
@@ -35,38 +56,27 @@ function Agents() {
     };
 
     const handleFormChange = (e) => {
-        setFormData(e.target.value);
+        console.log(e.target.name);
+        console.log(e.target.value);
+        const newFormData = {...formData};
+        newFormData[e.target.name] = e.target.value;
+        setFormData(newFormData);
     }
 
     const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if(editIndex){
-    //         console.log(`currently editing ${editIndex}`)
-    //     } else {
-    //         console.log("add a new agent");
-    //         const agent = {
-    //             firstName,
-    //             middleName,
-    //             lastName
-    //         };
-
-    //         const init = {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             body: JSON.stringify(agent)
-    //         }
-    //         fetch("http://localhost:8080/api/agent", init)
-    //         .then(response => {
-    //             if (response.status == 201) {
-    //                 setAgents("");
-    //             } else {
-    //                 return Promise.reject("POST agent status was not 201");
-    //             }
-    //         })
-    //         .catch(console.error);
-    //     }
+        e.preventDefault();
+        if(editIndex){
+            handleEdit(e.target.value)
+        } else {
+            console.log("add a new agent");
+            console.log(formData.firstName);
+            handleAddAgent(formData.firstName, formData.middleName, formData.lastName);
+        }
+        setFormData({
+            firstName:"",
+            middleName:"",
+            lastName:""
+        });
     }
 
     return (<div>
@@ -88,15 +98,15 @@ function Agents() {
             <form>
                 <div>
                     <label htmlFor='firstName'>First Name</label>
-                    <input id='firstName'onChange={handleFormChange} name='firstName' type='text'/>
+                    <input id='firstName'onChange={handleFormChange} name='firstName' type='text' value={formData.firstName}/>
                 </div>
                 <div>
                     <label htmlFor='middleName'>Middle Name</label>
-                    <input id='middleName'onChange={handleFormChange} name='middleName' type='text'/>
+                    <input id='middleName'onChange={handleFormChange} name='middleName' type='text' value={formData.middleName}/>
                 </div>
                 <div>
                     <label htmlFor='lastName'>Last Name</label>
-                    <input id='lastName' onChange={handleFormChange} name='lastName' type='text'/>
+                    <input id='lastName' onChange={handleFormChange} name='lastName' type='text' value={formData.lastName}/>
                 </div>
                 <button onClick={handleSubmit}>{(editIndex)?"Edit":"Create"} Agent</button>
             </form>
