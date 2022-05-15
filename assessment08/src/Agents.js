@@ -71,6 +71,7 @@ function Agents() {
         .then(resp => {
             const newAgents = agents.filter(agent => agent.agentId !== id);
             setAgents(newAgents);
+            console.log(newAgents);
         });
     };
 
@@ -107,7 +108,7 @@ function Agents() {
             {
                 agents.map(a => {
                     return(
-                        <p>{a.firstName} {a.middleName} {a.lastName} <button onClick={() => handleEdit(a.agentId)}>Edit</button><button onClick={() => handleDelete(a.agentId)}>Delete</button></p>
+                        <p key={a.agentId}>{a.firstName} {a.middleName} {a.lastName}<button onClick={() => handleEdit(a.agentId)}>Edit</button><button onClick={() => handleDelete(a.agentId)}>Delete</button></p>
                         )
                 })
             }
