@@ -41,6 +41,7 @@ function Agents() {
         })
         .then(resp => {
             const newAgents = [...agents];
+            debugger;
             const editAgentId = newAgents.findIndex(agent => editedAgent.agentId === newAgents.id);
             console.log(editAgentId);
             newAgents[editAgentId].firstName = formData.firstName;
@@ -53,6 +54,9 @@ function Agents() {
     };
 
     const handleAddAgent = (firstName, middleName, lastName, heightInInches) => {
+        if (firstName == "" && lastName == "" && heightInInches == ""){
+            console.log("Not Applicable Agent");
+        } else {
         const newAgent = {
             firstName: firstName,
             middleName: middleName,
@@ -73,6 +77,7 @@ function Agents() {
                 setAgents([...agents, agent]);
             });
         setAgents(agents.concat(newAgent));
+        }
     }
 
     const handleDelete = (id) => {
