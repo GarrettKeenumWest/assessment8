@@ -40,17 +40,17 @@ function Agents() {
             body: JSON.stringify(editedAgent)
         })
         .then(resp => {
-            const newAgents = [...agents];
-            debugger;
-            const editAgentId = newAgents.findIndex(agent => editedAgent.agentId === newAgents.id);
-            console.log(editAgentId);
-            newAgents[editAgentId].firstName = formData.firstName;
-            newAgents[editAgentId].middleName = formData.middleName;
-            newAgents[editAgentId].lastName = formData.lastName;
-            newAgents[editAgentId].heightInInches = formData.heightInInches;
-            setAgents(newAgents);
-            return (resp.json());
+            agents.forEach(agent => {
+                debugger;
+                if (agent.agentId === id){
+                    agent.firstName = formData.firstName;
+                    agent.middleName = formData.middleName;
+                    agent.lastName = formData.lastName;
+                    agent.heightInInches = formData.heightInInches;
+                }
+            });
         })
+        window.location.reload();
     };
 
     const handleAddAgent = (firstName, middleName, lastName, heightInInches) => {
