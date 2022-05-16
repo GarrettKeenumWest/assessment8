@@ -82,14 +82,18 @@ function Agents() {
 
     const handleDelete = (id) => {
         console.log(`Deletes ${id}`);
-        fetch(`http://localhost:8080/api/agent/${id}`, {
-            method: "DELETE"
-        })
-        .then(resp => {
-            const newAgents = agents.filter(agent => agent.agentId !== id);
-            setAgents(newAgents);
-            console.log(newAgents);
-        });
+        if (window.confirm(`Are You Sure You Want To Delete Agent ${id}`) != true){
+            console.log("Voided Delete");
+        } else {
+            fetch(`http://localhost:8080/api/agent/${id}`, {
+                method: "DELETE"
+            })
+            .then(resp => {
+                const newAgents = agents.filter(agent => agent.agentId !== id);
+                setAgents(newAgents);
+                console.log(newAgents);
+            });
+        }
     };
 
     const handleFormChange = (e) => {
